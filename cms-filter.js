@@ -61,7 +61,7 @@ class WORKFLOW {
     loadCards(data, categoryName, nicheName) {
         const CARDHTML = data.filter((card) => card.showOn === categoryName && card.showOnNiche === nicheName).map((card) => {
             if (card != null) {
-                return `<a href="https://element5.webflow.io/workflow-category-items/${card.link}" role="listitem" class="workflow-card">
+                return `<a href="/workflow-category-items/${card.link}" role="listitem" class="workflow-card">
         <img src=${card.cardImgSrc} loading="lazy" alt="" class="workflow-card-img">
             <p class="para-16 workflow-card-head">${card.cardName}</p>
             <p class="para-16 workflow-card-para">${card.cardDetails}</p>
