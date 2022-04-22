@@ -62,9 +62,11 @@ function addCssStyle(index){
                        image.style.boxShadow = item.imageShadow;
                        card.addEventListener("mouseover", () => {
                         card.style.boxShadow = item.cardShadow;
+                        card.style.borderColor = item.borderColor;
                        })
                        card.addEventListener("mouseleave", () => {
                         card.style.boxShadow = currCardShadowState;
+                        card.style.boxShadow = "none";
                        })
                    }
                 })
