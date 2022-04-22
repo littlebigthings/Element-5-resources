@@ -66,7 +66,7 @@ function addCssStyle(index){
                        })
                        card.addEventListener("mouseleave", () => {
                         card.style.boxShadow = currCardShadowState;
-                        card.style.boxShadow = "none";
+                        card.style.borderColor = "transparent";
                        })
                    }
                 })
