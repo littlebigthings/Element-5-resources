@@ -29,7 +29,10 @@ function automationCarousel(){
     if(carouselWrpArr.length > 0){
         let direction = true;
         carouselWrpArr.forEach((item, index)=>{
-            if(index == 1)direction=false
+            if(index == 1)direction=false;
+            $(item).on("init", () => {
+                addCssStyle(index);
+            })
             $(item).slick({
                 slidesToScroll: 1,
                 rtl:direction,
@@ -41,6 +44,31 @@ function automationCarousel(){
                 arrows: false,
                 variableWidth: true,
             });
+        })
+    }
+}
+
+function addCssStyle(index){
+    let carouselWrpArr = document.querySelectorAll(".unlimited-list-wrap")[index];
+    let cardsArr = (carouselWrpArr != undefined) && carouselWrpArr.querySelectorAll(".auto-card-wrap");
+    if(cardsArr.length > 0){
+        cardsArr.forEach(card => {
+            let itemIndex = card.querySelector("[data-item='index']");
+            let image = card.querySelector(".card-image");
+            if(itemIndex != undefined && itemIndex.innerHTML.length > 0){
+                cssObj.forEach(item => {
+                   if(item.itemIndex == itemIndex.innerHTML){
+                       let currCardShadowState = card.style.boxShadow;
+                       image.style.boxShadow = item.imageShadow;
+                       card.addEventListener("mouseover", () => {
+                        card.style.boxShadow = item.cardShadow;
+                       })
+                       card.addEventListener("mouseleave", () => {
+                        card.style.boxShadow = currCardShadowState;
+                       })
+                   }
+                })
+            }
         })
     }
 }
