@@ -11,44 +11,63 @@ function animateWaves() {
 
 function carouselTrusted() {
     let carouselElem = document.querySelector(".logo-list-wrapper");
-    if(carouselElem != undefined){
-        $(carouselElem).slick({
-            slidesToScroll: 1,
-            dots: false,
-            infinite: true,
-            autoplay: true,
-            autoplaySpeed: 2000,
-            arrows: false,
-            variableWidth: true,
-        });
-    }
+    let calcGap = (carouselElem != undefined) && window.getComputedStyle(carouselElem.children[0]).getPropertyValue("margin-right");
+    $(carouselElem).marquee({
+        duration: 20000,
+        gap: calcGap,
+        delayBeforeStart: 0,
+        direction: 'left',
+        duplicated: true,
+        startVisible:true,
+    });
+    // if(carouselElem != undefined){
+    //     $(carouselElem).slick({
+    //         slidesToScroll: 1,
+    //         dots: false,
+    //         infinite: true,
+    //         autoplay: true,
+    //         autoplaySpeed: 2000,
+    //         arrows: false,
+    //         variableWidth: true,
+    //     });
+    // }
 }
 
 function automationCarousel(){
     let carouselWrpArr = document.querySelectorAll(".unlimited-list-wrap");
     if(carouselWrpArr.length > 0){
-        let direction = true;
+        let direction = 'left';
         carouselWrpArr.forEach((item, index)=>{
-            if(index == 1)direction=false;
-            $(item).on("init", () => {
-                addCssStyle(index);
-            })
-            $(item).slick({
-                slidesToScroll: 1,
-                rtl:direction,
-                centerMode:direction,
-                dots: false,
-                infinite: true,
-                autoplay: true,
-                autoplaySpeed: 2000,
-                arrows: false,
-                variableWidth: true,
+            // let calcGap = (item != undefined) && window.getComputedStyle(item.children[0]).getPropertyValue("margin-right");
+            if(index == 1)direction='right';
+            let marqueeCtrl = $(item).marquee({
+                duration: 25000,
+                gap: 0,
+                delayBeforeStart: 0,
+                direction: direction,
+                duplicated: true,
+                startVisible:true,
             });
+            addCssStyle(index, marqueeCtrl)
+            // $(item).on("init", () => {
+            //     addCssStyle(index);
+            // })
+            // $(item).slick({
+            //     slidesToScroll: 1,
+            //     rtl:direction,
+            //     centerMode:direction,
+            //     dots: false,
+            //     infinite: true,
+            //     autoplay: true,
+            //     autoplaySpeed: 2000,
+            //     arrows: false,
+            //     variableWidth: true,
+            // });
         })
     }
 }
 
-function addCssStyle(index){
+function addCssStyle(index, marqueeCtrl){
     let carouselWrpArr = document.querySelectorAll(".unlimited-list-wrap")[index];
     let cardsArr = (carouselWrpArr != undefined) && carouselWrpArr.querySelectorAll(".auto-card-wrap");
     if(cardsArr.length > 0){
@@ -61,10 +80,12 @@ function addCssStyle(index){
                        let currCardShadowState = card.style.boxShadow;
                        image.style.boxShadow = item.imageShadow;
                        card.addEventListener("mouseover", () => {
+                        marqueeCtrl.marquee('pause');
                         card.style.boxShadow = item.cardShadow;
                         card.style.borderColor = item.borderColor;
                        })
                        card.addEventListener("mouseleave", () => {
+                        marqueeCtrl.marquee('resume');
                         card.style.boxShadow = currCardShadowState;
                         card.style.borderColor = "transparent";
                        })
