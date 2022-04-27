@@ -13,88 +13,82 @@ function carouselTrusted() {
     let carouselElem = document.querySelector(".logo-list-wrapper");
     let calcGap = (carouselElem != undefined) && window.getComputedStyle(carouselElem.children[0]).getPropertyValue("margin-right");
     $(carouselElem).marquee({
-        duration: 20000,
+        duration: 25000,
         gap: calcGap,
         delayBeforeStart: 0,
         direction: 'left',
         duplicated: true,
-        startVisible:true,
+        startVisible: true,
     });
-    // if(carouselElem != undefined){
-    //     $(carouselElem).slick({
-    //         slidesToScroll: 1,
-    //         dots: false,
-    //         infinite: true,
-    //         autoplay: true,
-    //         autoplaySpeed: 2000,
-    //         arrows: false,
-    //         variableWidth: true,
-    //     });
-    // }
 }
 
-function automationCarousel(){
+function automationCarousel() {
     let carouselWrpArr = document.querySelectorAll(".unlimited-list-wrap");
-    if(carouselWrpArr.length > 0){
+    if (carouselWrpArr.length > 0) {
         let direction = 'left';
-        carouselWrpArr.forEach((item, index)=>{
-            // let calcGap = (item != undefined) && window.getComputedStyle(item.children[0]).getPropertyValue("margin-right");
-            if(index == 1)direction='right';
+        carouselWrpArr.forEach((item, index) => {
+            if (index == 1) direction = 'right';
             let marqueeCtrl = $(item).marquee({
-                duration: 25000,
+                duration: 50000,
                 gap: 0,
                 delayBeforeStart: 0,
                 direction: direction,
                 duplicated: true,
-                startVisible:true,
+                startVisible: true,
             });
             addCssStyle(index, marqueeCtrl)
-            // $(item).on("init", () => {
-            //     addCssStyle(index);
-            // })
-            // $(item).slick({
-            //     slidesToScroll: 1,
-            //     rtl:direction,
-            //     centerMode:direction,
-            //     dots: false,
-            //     infinite: true,
-            //     autoplay: true,
-            //     autoplaySpeed: 2000,
-            //     arrows: false,
-            //     variableWidth: true,
-            // });
         })
     }
 }
-
-function addCssStyle(index, marqueeCtrl){
+function onImagesLoaded(event) {
+    var images = document.getElementsByClassName("logo-image");
+    console.log(images.length)
+    var loaded = images.length;
+    for (var i = 0; i < images.length; i++) {
+        if (images[i].complete) {
+            loaded--;
+        } else {
+            images[i].addEventListener("load", function () {
+                loaded--;
+                if (loaded == 0) {
+                    event();
+                }
+            });
+        }
+        if (loaded == 0) {
+            event();
+        }
+    }
+}
+function addCssStyle(index, marqueeCtrl) {
     let carouselWrpArr = document.querySelectorAll(".unlimited-list-wrap")[index];
     let cardsArr = (carouselWrpArr != undefined) && carouselWrpArr.querySelectorAll(".auto-card-wrap");
-    if(cardsArr.length > 0){
+    if (cardsArr.length > 0) {
         cardsArr.forEach(card => {
             let itemIndex = card.querySelector("[data-item='index']");
             let image = card.querySelector(".card-image");
-            if(itemIndex != undefined && itemIndex.innerHTML.length > 0){
+            if (itemIndex != undefined && itemIndex.innerHTML.length > 0) {
                 cssObj.forEach(item => {
-                   if(item.itemIndex == itemIndex.innerHTML){
-                       let currCardShadowState = card.style.boxShadow;
-                       image.style.boxShadow = item.imageShadow;
-                       card.addEventListener("mouseover", () => {
-                        marqueeCtrl.marquee('pause');
-                        card.style.boxShadow = item.cardShadow;
-                        card.style.borderColor = item.borderColor;
-                       })
-                       card.addEventListener("mouseleave", () => {
-                        marqueeCtrl.marquee('resume');
-                        card.style.boxShadow = currCardShadowState;
-                        card.style.borderColor = "transparent";
-                       })
-                   }
+                    if (item.itemIndex == itemIndex.innerHTML) {
+                        let currCardShadowState = card.style.boxShadow;
+                        image.style.boxShadow = item.imageShadow;
+                        card.addEventListener("mouseover", () => {
+                            marqueeCtrl.marquee('pause');
+                            card.style.boxShadow = item.cardShadow;
+                            card.style.borderColor = item.borderColor;
+                        })
+                        card.addEventListener("mouseleave", () => {
+                            marqueeCtrl.marquee('resume');
+                            card.style.boxShadow = currCardShadowState;
+                            card.style.borderColor = "transparent";
+                        })
+                    }
                 })
             }
         })
     }
 }
 animateWaves();
-carouselTrusted();
+// carouselTrusted();
 automationCarousel();
+onImagesLoaded(carouselTrusted);
