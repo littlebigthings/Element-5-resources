@@ -1,0 +1,255 @@
+.hs-form fieldset .hs-form-field {
+  padding: 0 0px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.hs-form .form-columns-1 {
+  max-width: 100% !important;
+}
+.hs-form .form-columns-2 {
+  max-width: 100% !important;
+}
+.hs_cos_wrapper.form-title {
+  display: none;
+}
+@media screen and (max-width: 400px) {
+  .hs-form fieldset.form-columns-3 .hs-form-field {
+    width: 100% !important;
+  }
+}
+
+/* .hs-form label,
+.hs-form label span:first-child {
+  font-family: 'Manrope' !important;
+  color: #340d45 !important;
+  font-size: 1.2em !important;
+  line-height: 1.32;
+  letter-spacing: 0px !important;
+  font-weight: 600 !important;
+  margin-bottom: 1.11em;
+} */
+.hs-form label {
+  display: none;
+  width: 100% !important;
+  /* float: left !important; */
+  text-align: left !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+.hs-form input[type="date"],
+.hs-form input[type="datetime"],
+.hs-form input[type="datetime-local"],
+.hs-form input[type="email"],
+.hs-form input[type="month"],
+input[type="number"],
+.hs-form input[type="password"],
+.hs-form input[type="range"],
+.hs-form input[type="search"],
+.hs-form input[type="tel"],
+.hs-form input[type="text"],
+.hs-form input[type="time"],
+.hs-form input[type="url"],
+.hs-form input[type="week"],
+.hs-form .input textarea,
+.hs-form .hs-input textarea,
+.hs-form textarea,
+.hs-form .input select,
+.hs-form .hs-input select,
+.hs-form select {
+  text-align: left !important;
+  font-family: "Manrope" !important;
+  letter-spacing: 0px !important;
+  font-weight: 400 !important;
+  font-size: 1.11em !important;
+  line-height: 1.6;
+  color: #828282 !important;
+  background-color: transparent !important;
+  padding: 0 0 0.6875em 1em;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-radius: 0 !important;
+  -moz-border-radius: 0 !important;
+  -webkit-border-radius: 0 !important;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid #737b7d !important;
+  height: 100% !important;
+  width: 31em !important;
+  -webkit-appearance: none;
+}
+.hs-form .hs-form-field {
+  margin-bottom: 3.75em;
+}
+
+.hs-form input[type="reset"],
+.hs-form input[type="submit"] {
+  cursor: pointer;
+  padding: 0.9375em 3.1875em;
+  margin-top: 0em !important;
+  font-size: 1.111em !important;
+  line-height: 1.875;
+  font-family: "Manrope" !important;
+  letter-spacing: 0.02em !important;
+  font-weight: 700 !important;
+  border: none !important;
+  border-radius: 0.3125em !important;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #d63d18 0%, #ff8a00 100%) !important;
+  color: #ffffff !important;
+  border-style: solid !important;
+  -moz-border-radius: 0.3125em !important;
+  -webkit-border-radius: 0.3125em !important;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -webkit-transition: all 0.2s linear;
+  -o-transition: all 0.2s linear;
+  -moz-transition: all 0.2s linear;
+  -ms-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+  -khtml-transition: all 0.2s linear;
+}
+.hs-form .hs-submit {
+  display: inline-block;
+  width: 100%;
+}
+.hs-form .hs-submit .actions {
+  width: 100% !important;
+  float: left !important;
+  clear: both !important;
+  text-align: left !important;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  padding: 0em !important;
+}
+@media screen and (max-width: 767px) {
+  .hs-form .form-columns-2 > div.hs-form-field,
+  .hs-form .form-columns-3 > div.hs-form-field,
+  .hs-form .form-columns-4 > div.hs-form-field {
+    width: 100% !important;
+  }
+}
+
+.hs-form button,
+.hs-form input[type="button"],
+.hs-form input[type="reset"],
+.hs-form input[type="submit"] {
+  width: 100%;
+}
+.hs-form .hs-error-msgs label,
+.hs-form .hs-error-msgs label span {
+    display: block;
+  font-family: "Manrope" !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 400 !important;
+  font-size: 0.69em !important;
+  color: #d40d0d !important;
+  margin-bottom: 0 !important;
+  margin-top: 0.5em !important;
+  line-height: 1.6;
+}
+.hs-form button:hover,
+.hs-form input[type="button"]:hover,
+.hs-form input[type="reset"]:hover,
+.hs-form input[type="submit"]:hover {
+  transform: perspective(1000px) translate(0, -5px);
+}
+.grecaptcha-badge {
+  width: auto !important;
+  height: auto !important;
+  box-shadow: none !important;
+}
+/* checkbox styling */
+.hs-form input[type="checkbox"] {
+  appearance: none;
+  width: 1.162em;
+  height: 1.162em;
+  margin-top: 0;
+  margin-right: 1em;
+  margin-left: 0;
+  border-style: solid;
+  border-color: #383C3E !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 0 transparent;
+}
+.hs-form input:checked {
+  border-style: solid;
+  border-color: #383C3E !important;
+  background-color: #ffffff !important;
+  background-image: url(https://uploads-ssl.webflow.com/620c849ca60d8c410cd8ccb6/620e2edfaec4b864cdd2e7c2_checked.svg);
+  background-repeat: no-repeat !important;
+  background-size: contain;
+  background-position: center;
+  color: #FF8A00 !important;
+}
+.hs-form .hs-form-checkbox-display {
+  display: flex;
+  align-items: center;
+}
+.center-the-form form,
+.center-the-form form input {
+  text-align: center;
+}
+.fn-date-picker .pika-button {
+  text-align: center !important;
+}
+.hs-form input[type="date"],
+.hs-form input[type="datetime"],
+.hs-form input[type="datetime-local"],
+.hs-form input[type="email"],
+.hs-form input[type="month"],
+input[type="number"],
+.hs-form input[type="password"],
+.hs-form input[type="range"],
+.hs-form input[type="search"],
+.hs-form input[type="tel"],
+.hs-form input[type="text"],
+.hs-form input[type="time"],
+.hs-form input[type="url"],
+.hs-form input[type="week"],
+.hs-form .input textarea,
+.hs-form .hs-input textarea,
+.hs-form textarea,
+.hs-form .input select,
+.hs-form .hs-input select,
+.hs-form select:focus-visible {
+  outline-offset: 1px !important;
+  outline: 1px #340d45 !important;
+}
+
+/* styling for check box */
+.hs-form .inputs-list .hs-form-checkbox {
+  list-style: none !important;
+}
+.hs-form .inputs-list {
+  padding-left: 1.4em !important;
+}
+/* styling for select arrow */
+.hs-form .input select,
+.hs-form .hs-input select,
+.hs-form select {
+  background-image: url(https://uploads-ssl.webflow.com/5f365b4c10e0c3cfd4795777/626aa587e4be843e00bde15c_1Vector.svg);
+  background-position: 97% 50%;
+  background-size: 1.11em;
+  background-repeat: no-repeat;
+}
+/* styling for required field */
+.hs-form-required {
+  color: #ff1c1c !important;
+}
+
+/* styling for error */
+.hs-form .no-list {
+  list-style: none;
+  padding-left: 0 !important;
+}
+
+.submitted-message{
+    font-family: "Manrope" !important;
+}
