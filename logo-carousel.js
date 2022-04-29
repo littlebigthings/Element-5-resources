@@ -4,16 +4,17 @@ function carouselTrusted() {
     $(carouselElem).marquee({
         duration: 25000,
         gap: calcGap,
-        delayBeforeStart: 0,
+        delayBeforeStart: 6000,
         direction: 'left',
         duplicated: true,
         startVisible: true,
+        allowCss3Support:true,
+        css3easing:"linear",
     });
 }
 
 function onImagesLoaded(event) {
     var images = document.getElementsByClassName("logo-image");
-    console.log(images.length)
     var loaded = images.length;
     for (var i = 0; i < images.length; i++) {
         if (images[i].complete) {
