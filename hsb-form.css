@@ -253,3 +253,35 @@ input[type="number"],
 .submitted-message{
     font-family: "Manrope" !important;
 }
+
+@media only screen and (max-width: 768px) {
+  .hs-form input[type="date"],
+  .hs-form input[type="datetime"],
+  .hs-form input[type="datetime-local"],
+  .hs-form input[type="email"],
+  .hs-form input[type="month"],
+  input[type="number"],
+  .hs-form input[type="password"],
+  .hs-form input[type="range"],
+  .hs-form input[type="search"],
+  .hs-form input[type="tel"],
+  .hs-form input[type="text"],
+  .hs-form input[type="time"],
+  .hs-form input[type="url"],
+  .hs-form input[type="week"],
+  .hs-form .input textarea,
+  .hs-form .hs-input textarea,
+  .hs-form textarea,
+  .hs-form .input select,
+  .hs-form .hs-input select,
+  .hs-form select{
+    width: 16.875em !important;
+    font-size: 1.7777777777777777em !important;
+  }
+  .hs-form .hs-error-msgs label, .hs-form .hs-error-msgs label span{
+    font-size: 1.11em !important;
+  }
+  .hs-form input[type="reset"], .hs-form input[type="submit"]{
+     font-size: 1.77em !important;
+  }
+}
