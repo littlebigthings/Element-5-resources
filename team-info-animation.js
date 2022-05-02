@@ -1,7 +1,8 @@
-let allCards = document.querySelectorAll("[data-item='card']");
+let allCards = [...document.querySelectorAll("[data-item='card']")];
 let allAlias = document.querySelectorAll("[data-item='alias']");
 let allInfo = document.querySelectorAll("[data-item='full-info']");
 let descToShowComp = document.querySelector("[data-item='put-desc']");
+let mainWrapper = document.querySelector(".team-leaders-wrap");
 gsap.registerPlugin(Flip);
 function doFlip(card) {
     // Get the initial state
@@ -29,30 +30,48 @@ function animateCards() {
             let fullInfo = card.querySelector("[data-item='full-info']");
             if (card.classList.contains("active-card") && index != 0) {
                 if (aliasWrp != undefined && fullInfo != undefined) {
-                    aliasWrp.classList.remove("first-name-hide");
-                    fullInfo.classList.add("leader-details-hide");
-                    card.classList.remove("active-card");
+                    if(window.screen.width > 768){
+                        aliasWrp.classList.remove("first-name-hide");
+                        fullInfo.classList.add("leader-details-hide");
+                        card.classList.remove("active-card");
+                    }
+                }
+            }
+            else{
+                if(window.screen.width <= 768){
+                    aliasWrp.classList.add("first-name-hide");
+                    fullInfo.classList.remove("leader-details-hide");
+                    card.classList.add("active-card");
                 }
             }
             if (index == 0) {
                 let infoToShow = card.querySelector("[data-item='get-desc']");
                 if (aliasWrp != undefined && fullInfo != undefined && infoToShow != undefined) {
+                    if(window.screen.width > 768){
                     aliasWrp.classList.add("first-name-hide");
                     fullInfo.classList.remove("leader-details-hide");
                     card.classList.add("active-card");
+                    }
+                    else if(window.screen.width <= 768){
+                        aliasWrp.classList.add("first-name-hide");
+                        fullInfo.classList.remove("leader-details-hide");
+                        card.classList.add("active-card");
+                        }
                     descToShowComp.innerHTML = infoToShow.innerHTML;
                 }
             }
-            card.addEventListener("click", (event) => {
-                let currCard = event.currentTarget;
-                if (currCard != undefined && !currCard.classList.contains("active-card")) {
-                    let infoToShow = card.querySelector("[data-item='get-desc']");
-                    descToShowComp.innerHTML = infoToShow.innerHTML;
-                    gsap.fromTo(descToShowComp,{y:"-10px",opacity:0},{y:"0", opacity:1, duration:0.5, ease:'linear'});
-                    doFlip(currCard)
-                    deactiveCards(currCard);
-                }
-            })
+            if(window.screen.width > 768){
+                card.addEventListener("click", (event) => {
+                    let currCard = event.currentTarget;
+                    if (currCard != undefined && !currCard.classList.contains("active-card")) {
+                        let infoToShow = card.querySelector("[data-item='get-desc']");
+                        descToShowComp.innerHTML = infoToShow.innerHTML;
+                        gsap.fromTo(descToShowComp,{y:"-10px",opacity:0},{y:"0", opacity:1, duration:0.5, ease:'linear'});
+                        doFlip(currCard)
+                        deactiveCards(currCard);
+                    }
+                })
+            }
         })
     }
 }
@@ -69,4 +88,33 @@ function deactiveCards(activeCard) {
     }
 }
 
+function initSlider(){
+    if(mainWrapper != undefined){
+        let slider = $(mainWrapper).slick({
+            dots: false,
+            slidesToScroll: 1,
+            infinite: false,
+            autoplay: false,
+            variableWidth: true,
+            arrows: false,
+            centerMode: true,
+            draggable: true,
+            focusOnSelect: true,
+            arrows: false,
+            speed:500,
+        });
+        slider.on("beforeChange", (event, slick, currentSlide, nextSlide) => {
+            let currCard = allCards[nextSlide];
+                if (currCard != undefined && currCard.classList.contains("active-card")) {
+                    let infoToShow = currCard.querySelector("[data-item='get-desc']");
+                    descToShowComp.innerHTML = infoToShow.innerHTML;
+                    gsap.fromTo(descToShowComp,{y:"-10px",opacity:0},{y:"0", opacity:1, duration:0.5, ease:'linear'});
+                }
+        })
+    }
+}
+
 animateCards();
+if(window.screen.width < 768){
+    initSlider();
+}
