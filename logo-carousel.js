@@ -4,7 +4,7 @@ function carouselTrusted() {
     $(carouselElem).marquee({
         duration: 25000,
         gap: calcGap,
-        delayBeforeStart: 6000,
+        delayBeforeStart: 3000,
         direction: 'left',
         duplicated: true,
         startVisible: true,
