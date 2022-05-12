@@ -1,13 +1,14 @@
 class WORKFLOW {
     constructor() {
-        this.topHead = document.getElementsByClassName("top-head-container")[0];
-        this.wrapper = document.getElementsByClassName("right-workflow-container")[0];
-        this.catBlockEle = document.getElementsByClassName("category-bottom")[0];
+        this.topHead = document.querySelector("[data-category='niche']");
+        this.wrapper = document.querySelector("[data-wrapper='cards-wrapper']");
+        this.catBlockEle = document.querySelector("[data-category='left-category']");
         this.appData = {
             categoryData: window.categoryData,
             cardData: window.cardData,
             nicheData: window.nichesData
         };
+        this.filteredCards = [];
         this.init();
     }
     init() {
@@ -44,7 +45,7 @@ class WORKFLOW {
         this.appData.nicheData.forEach((niche) => {
             this.topHead.innerHTML += `
             <div role="listitem" class="top-head">
-            <p id=${niche.nicheSlug} data-head="niche" class="para-18 head-para">${niche.nicheName}</p>
+            <p id=${niche.nicheSlug} data-head="niche" class="para-18 head-para font-manrope">${niche.nicheName}</p>
             </div>`;
         })
     }
@@ -55,13 +56,17 @@ class WORKFLOW {
             const cardsHtml = this.loadCards(this.appData.cardData, category.categorySlug, showOnNiche)
             const headHtml = this.loadHead(category, showOnNiche);
             const cardContainerHtml = this.loadCardContainer(cardsHtml);
-            this.loadWrapper(headHtml, cardContainerHtml, category);
+            this.loadWrapper(headHtml, cardContainerHtml, category, this.appData.cardData);
         })
     }
     // function to load cards.
     loadCards(data, categoryName, nicheName) {
+        while(this.filteredCards.length > 0){
+            this.filteredCards.pop();
+        }
         const CARDHTML = data.filter((card) => card.showOn === categoryName && card.showOnNiche === nicheName).map((card) => {
             if (card != null) {
+                this.filteredCards.push(card);
                 return `<a href="/workflow-category-items/${card.link}" role="listitem" class="workflow-card">
         <img src=${card.cardImgSrc} loading="lazy" alt="" class="workflow-card-img">
             <p class="para-16 workflow-card-head">${card.cardName}</p>
@@ -90,7 +95,7 @@ class WORKFLOW {
         }
     }
     // function to add card container and head container into a wrapper:
-    loadWrapper(headHtml, cardContainer, category) {
+    loadWrapper(headHtml, cardContainer, category, cardData) {
         if (headHtml != undefined && cardContainer != undefined) {
             let headCardWrapper = document.createElement("div");
             let line = document.createElement("div");
@@ -102,7 +107,7 @@ class WORKFLOW {
             headCardWrapper.appendChild(cardContainer);
             headCardWrapper.appendChild(line);
             this.wrapper.appendChild(headCardWrapper);
-            this.cardEvents();
+            this.cardEvents(cardContainer);
         }
         else if (headHtml == undefined && cardContainer == undefined) {
             let headCardWrapper = document.querySelectorAll(".right-workflow-wrapper");
@@ -116,20 +121,34 @@ class WORKFLOW {
         }
     }
     // function to listen card events
-    cardEvents() {
-        let cards = document.querySelectorAll(".workflow-card")
-        cards.forEach(card => {
-            card.addEventListener("mouseover", (eve) => {
-                let targetEle = eve.currentTarget;
-                let link = targetEle.childNodes[7];
-                link.style.opacity = 1;
+    cardEvents(cardContainer) {
+        let cards = cardContainer.querySelectorAll(".workflow-card")
+        if (cards.length > 0) {
+            cards.forEach(card => {
+                let cardname = card.querySelector(".workflow-card-head");
+                let image = card.querySelector(".workflow-card-img");
+                if (image != undefined && cardname.innerHTML.length > 0 && cardData != undefined) {
+                    this.filteredCards.forEach(item => {
+                        if (item.cardName == cardname.innerHTML) {
+                            let currCardShadowState = card.style.boxShadow;
+                            image.style.boxShadow = item["imageShadow"];
+                            card.addEventListener("mouseover", (eve) => {
+                                card.style.boxShadow = item["cardShadow"];
+                                card.style.borderColor = item["borderColor"];
+                                let targetEle = eve.currentTarget.querySelector(".know-more-link");
+                                targetEle.style.opacity = 1;
+                            })
+                            card.addEventListener("mouseleave", (eve) => {
+                                card.style.boxShadow = currCardShadowState;
+                                card.style.borderColor = "transparent";
+                                let targetEle = eve.currentTarget.querySelector(".know-more-link");
+                                targetEle.style.opacity = 0;
+                            })
+                        }
+                    })
+                }
             })
-            card.addEventListener("mouseout", (eve) => {
-                let targetEle = eve.currentTarget;
-                let link = targetEle.childNodes[7];
-                link.style.opacity = 0;
-            })
-        })
+        }
     };
     // function to listen to events.
     listenToEvent(data) {
@@ -179,7 +198,7 @@ class WORKFLOW {
     // get the niches DOM.
     getCategoryDom(data, categoryName) {
         const CATDOM = data.filter((category) => category.showOnNiche === categoryName).map((category) => {
-            return `<a href="#" data-id="${category.categorySlug}" role="listitem" class="categories-block flexbox"><img src=${category.categoryImg} loading="lazy" alt="${categoryName}" class="catrgory-img"><p class="para-16 para-category">${category.categoryTitle}</p></a>`.toString().split(',').join('');
+            return `<a href="#" data-id="${category.categorySlug}" role="listitem" class="_wf-category"><img src=${category.categoryImg} loading="lazy" alt="${categoryName}" class="_wf-cat-img"><p class="_wf-cat-para-16">${category.categoryTitle}</p></a>`.toString().split(',').join('');
         });
         return CATDOM;
     }
@@ -189,7 +208,7 @@ class WORKFLOW {
         Dom.forEach(ele => {
             this.catBlockEle.innerHTML += ele;
         })
-        let catBlock = document.querySelectorAll(".categories-block.flexbox");
+        let catBlock = document.querySelectorAll("._wf-category");
         if (catBlock.length != 0) {
             if (category) {
                 let activeCat = document.querySelector(`[data-id = ${category}]`);
@@ -226,7 +245,7 @@ class WORKFLOW {
         this.observer.observe(wrapper);
     }
     activateCategory(id) {
-        document.querySelectorAll(".categories-block.flexbox").forEach(cat => {
+        document.querySelectorAll("._wf-category").forEach(cat => {
             if (cat.classList.contains("active-left-border")) {
                 cat.classList.remove("active-left-border");
                 cat.children[1].classList.remove("active-para");
@@ -249,7 +268,7 @@ class WORKFLOW {
     // add the left border into the categories.
     removeActive(eve) {
         let box = eve.currentTarget.closest(".flexbox");
-        document.querySelectorAll(".categories-block.flexbox").forEach(cat => {
+        document.querySelectorAll("._wf-category").forEach(cat => {
             if (cat.classList.contains("active-left-border") && (cat.children[1].classList.contains("active-para"))) {
                 cat.classList.remove("active-left-border");
                 cat.children[1].classList.remove("active-para");
@@ -262,7 +281,7 @@ class WORKFLOW {
     filterAllCategory() {
         this.appData.categoryData.map(cat => this.uniqueCategory.filter(categ => categ.categoryTitle == cat.categoryTitle).length > 0 ? null : this.uniqueCategory.push(cat));
         let CATDOM = this.uniqueCategory.map((category) => {
-            return `<a href="#" data-id="${category.categorySlug}" role="listitem" class="categories-block flexbox"><img src=${category.categoryImg} loading="lazy" alt="${category.categoryTitle}" class="catrgory-img"><p class="para-16 para-category">${category.categoryTitle}</p></a>`.toString().split(',').join('');
+            return `<a href="#" data-id="${category.categorySlug}" role="listitem" class="_wf-category"><img src=${category.categoryImg} loading="lazy" alt="${category.categoryTitle}" class="_wf-cat-img"><p class="_wf-cat-para-16">${category.categoryTitle}</p></a>`.toString().split(',').join('');
         });
         return CATDOM;
     }
@@ -271,8 +290,12 @@ class WORKFLOW {
     filterAllCards(categoryTitle) {
         let uniqueCards = [];
         this.appData.cardData.map(card => uniqueCards.filter(cardItem => (cardItem.cardName == card.cardName)).length > 0 ? null : uniqueCards.push(card));
+        while(this.filteredCards.length > 0){
+            this.filteredCards.pop();
+        }
         const CARDHTML = uniqueCards.filter((card) => card.categoryName === categoryTitle).map((card) => {
             if (card != null) {
+                this.filteredCards.push(card);
                 return `<a href="/workflow-category-items/${card.link}" role="listitem" class="workflow-card">
         <img src=${card.cardImgSrc} loading="lazy" alt="" class="workflow-card-img">
             <p class="para-16 workflow-card-head">${card.cardName}</p>
