@@ -236,12 +236,13 @@ class WORKFLOW {
         })
     }
     observeScroll(wrapper) {
+        let rootMargin = window.screen.width < 768 ? '0px' : '-200px';
         this.observer = new IntersectionObserver((wrapper) => {
             if (wrapper[0]['isIntersecting'] == true) {
                 let elID = wrapper[0].target.id;
                 this.activateCategory(elID);
             }
-        }, { root: null, threshold: 0, rootMargin: '-200px' });
+        }, { root: null, threshold: 0, rootMargin: rootMargin });
         this.observer.observe(wrapper);
     }
     activateCategory(id) {
@@ -261,7 +262,7 @@ class WORKFLOW {
         let el = document.getElementById(id);
         let elDistanceToTop = window.pageYOffset + el.getBoundingClientRect().top;
         window.scrollTo({
-            top: elDistanceToTop - 110,
+            top: elDistanceToTop - 130,
             behavior: 'smooth'
         });
     }
