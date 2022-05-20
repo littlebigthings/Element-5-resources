@@ -61,7 +61,7 @@ class WORKFLOW {
     }
     // function to load cards.
     loadCards(data, categoryName, nicheName) {
-        while(this.filteredCards.length > 0){
+        while (this.filteredCards.length > 0) {
             this.filteredCards.pop();
         }
         const CARDHTML = data.filter((card) => card.showOn === categoryName && card.showOnNiche === nicheName).map((card) => {
@@ -158,9 +158,11 @@ class WORKFLOW {
             activeNiche.classList.add("active");
             this.categoryFilter(activeNiche.id);
             this.nicheData = null;
+            this.animateCards();
         } else {
             headBlock[0].classList.add("active");
             this.categoryFilter(headBlock[0].id);
+            this.animateCards();
         }
         this.topHead.addEventListener("click", (e) => {
             if (e.target.dataset.head == "niche") {
@@ -173,6 +175,7 @@ class WORKFLOW {
                     e.target.classList.add("active")
                 })
                 this.addListener();
+                this.animateCards();
             }
         });
     }
@@ -291,7 +294,7 @@ class WORKFLOW {
     filterAllCards(categoryTitle) {
         let uniqueCards = [];
         this.appData.cardData.map(card => uniqueCards.filter(cardItem => (cardItem.cardName == card.cardName)).length > 0 ? null : uniqueCards.push(card));
-        while(this.filteredCards.length > 0){
+        while (this.filteredCards.length > 0) {
             this.filteredCards.pop();
         }
         const CARDHTML = uniqueCards.filter((card) => card.categoryName === categoryTitle).map((card) => {
@@ -312,6 +315,31 @@ class WORKFLOW {
     loadHeads(category) {
         if (category) {
             return `<div class="right-top-block"><h2 class="workflow-heading">${category.categoryTitle}</h2><p class="para-16 width-60">${category.categoryDesc}</p></div>`;
+        }
+    }
+
+    // fucntion to animate cards
+    animateCards() {
+        let allWrappers = document.querySelectorAll(".right-workflow-wrapper");
+        let allCards = document.querySelectorAll(".workflow-card");
+        let timeline = gsap.timeline();
+        if (allCards.length > 0 && allWrappers.length > 0 && window.screen.width > 768) {
+            gsap.set(allCards, { opacity: 0, y: "-20px" })
+            ScrollTrigger.batch(allWrappers,{
+                start: "top 30%",
+                onEnter: batch => {
+                    let cards = batch[0].querySelectorAll(".workflow-card");
+                    if(cards.length > 0){
+                        timeline.to(cards, {
+                            opacity: 1,
+                            y: "0px",
+                            duration: 0.2,
+                            stagger: 0.1,
+                            ease: "linear",
+                        })
+                    }
+                }
+            })
         }
     }
 
