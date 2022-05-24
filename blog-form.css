@@ -123,23 +123,7 @@ input[type="number"],
     -khtml-transition: all 0.2s linear;
   }
 
-  .hs-form input[type="date"],
-  .hs-form input[type="datetime"],
-  .hs-form input[type="datetime-local"],
-  .hs-form input[type="email"],
-  .hs-form input[type="month"],
-  input[type="number"],
-  .hs-form input[type="password"],
-  .hs-form input[type="range"],
-  .hs-form input[type="search"],
-  .hs-form input[type="tel"],
-  .hs-form input[type="text"],
-  .hs-form input[type="time"],
-  .hs-form input[type="url"],
-  .hs-form input[type="week"],
-  .hs-form .input textarea,
-  .hs-form .hs-input textarea,
-  .hs-form textarea::placeholder{
+  .hs-form input[type="email"]::placeholder{
       opacity: 0.4;
   }
   .hs-form .hs-submit {
