@@ -3,6 +3,7 @@ class WORKFLOW {
         this.topHead = document.querySelector("[data-category='niche']");
         this.wrapper = document.querySelector("[data-wrapper='cards-wrapper']");
         this.catBlockEle = document.querySelector("[data-category='left-category']");
+        this.updateCategoryText = document.querySelectorAll("[data-active='false']")[1];
         this.appData = {
             categoryData: window.categoryData,
             cardData: window.cardData,
@@ -159,10 +160,12 @@ class WORKFLOW {
             this.categoryFilter(activeNiche.id);
             this.nicheData = null;
             this.animateCards();
+            this.updateCatText(activeNiche.innerHTML);
         } else {
             headBlock[0].classList.add("active");
             this.categoryFilter(headBlock[0].id);
             this.animateCards();
+            this.updateCatText(headBlock[0].innerHTML);
         }
         this.topHead.addEventListener("click", (e) => {
             if (e.target.dataset.head == "niche") {
@@ -176,6 +179,7 @@ class WORKFLOW {
                 })
                 this.addListener();
                 this.animateCards();
+                this.updateCatText(e.target.innerHTML)
             }
         });
     }
@@ -315,6 +319,13 @@ class WORKFLOW {
     loadHeads(category) {
         if (category) {
             return `<div class="right-top-block"><h2 class="workflow-heading">${category.categoryTitle}</h2><p class="para-16 width-60">${category.categoryDesc}</p></div>`;
+        }
+    }
+
+    // function to update "workflow category text"
+    updateCatText(text){
+        if(this.updateCategoryText!= undefined && text.length > 0){
+            this.updateCategoryText.innerHTML = `${text} Workflow Category`;
         }
     }
 
