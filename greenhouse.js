@@ -158,80 +158,201 @@ class GREENHOUSEJOBBOARD {
         if (allTablesArr.length > 0) {
             if (this.filteredDepartments.length > 0) {
                 if (this.filteredLocations.length > 0) {
-                    console.log("department and location")
-                    allTablesArr.forEach(table => {
-                        let allLocations = [...table.querySelectorAll("[data-item='job-item']")];
-                        allLocations.forEach(locationItem => {
-                            if (this.filteredLocations.includes(locationItem)) {
-                                locationItem.classList.remove("hide");
+                    if (this.filteredRoles.length > 0) {
+                        console.log("department and location and search")
+                        allTablesArr.forEach(table => {
+                            let allLocations = [...table.querySelectorAll("[data-item='job-item']")];
+                            allLocations.forEach(locationItem => {
+                                if (this.filteredLocations.includes(locationItem) && this.filteredRoles.includes(locationItem)) {
+                                    locationItem.classList.remove("hide");
+                                }
+                                else {
+                                    locationItem.classList.add("hide");
+                                }
+                            })
+                            let checkAllhideChild = [...allLocations.filter(loc => {
+                                if (loc.classList.contains('hide')) {
+                                    return loc
+                                }
+                            })];
+                            if (this.filteredDepartments.includes(table)) {
+                                table.classList.remove("hide");
                             }
                             else {
-                                locationItem.classList.add("hide");
+                                table.classList.add("hide")
+                            }
+                            if (checkAllhideChild.length <= 0 && this.filteredDepartments.includes(table)) {
+                                table.classList.remove("hide")
+                            }
+                            else if (checkAllhideChild.length == allLocations.length && this.filteredDepartments.includes(table)) {
+                                table.classList.add("hide")
                             }
                         })
-                        let checkAllhideChild = [...allLocations.filter(loc => {
-                            if (loc.classList.contains('hide')) {
-                                return loc
+                    }
+                    else {
+                        console.log("department and location")
+                        allTablesArr.forEach(table => {
+                            let allLocations = [...table.querySelectorAll("[data-item='job-item']")];
+                            allLocations.forEach(locationItem => {
+                                if (this.filteredLocations.includes(locationItem)) {
+                                    locationItem.classList.remove("hide");
+                                }
+                                else {
+                                    locationItem.classList.add("hide");
+                                }
+                            })
+                            let checkAllhideChild = [...allLocations.filter(loc => {
+                                if (loc.classList.contains('hide')) {
+                                    return loc
+                                }
+                            })];
+                            if (this.filteredDepartments.includes(table)) {
+                                table.classList.remove("hide");
                             }
-                        })];
-                        if(this.filteredDepartments.includes(table)){
-                            table.classList.remove("hide");
-                        }
-                        else{
-                            table.classList.add("hide")
-                        }
-                        if (checkAllhideChild.length <= 0 && this.filteredDepartments.includes(table)) {
-                            table.classList.remove("hide")
-                        }
-                        else if (checkAllhideChild.length == allLocations.length && this.filteredDepartments.includes(table)) {
-                            table.classList.add("hide")
-                        }
-                    })
+                            else {
+                                table.classList.add("hide")
+                            }
+                            if (checkAllhideChild.length <= 0 && this.filteredDepartments.includes(table)) {
+                                table.classList.remove("hide")
+                            }
+                            else if (checkAllhideChild.length == allLocations.length && this.filteredDepartments.includes(table)) {
+                                table.classList.add("hide")
+                            }
+                        })
+                    }
                 }
                 else {
-                    console.log("department not location")
-                    allTablesArr.forEach(table => {
-                        if (this.filteredDepartments.includes(table)) {
-                            table.classList.remove("hide");
-                        }
-                        else {
-                            table.classList.add("hide")
-                        }
-                        let allLocations = table.querySelectorAll("[data-item='job-item']");
-                        allLocations.forEach(locationItem => {
-                            locationItem.classList.remove("hide");
+                    if (this.filteredRoles.length > 0) {
+                        console.log("department & search not location")
+                        allTablesArr.forEach(table => {
+                            if (this.filteredDepartments.includes(table)) {
+                                table.classList.remove("hide");
+                            }
+                            else {
+                                table.classList.add("hide")
+                            }
+                            let allLocations = [...table.querySelectorAll("[data-item='job-item']")];
+                            allLocations.forEach(locationItem => {
+                                if (this.filteredRoles.includes(locationItem) && this.filteredDepartments.includes(table)) {
+                                    locationItem.classList.remove("hide");
+                                }
+                                else {
+                                    locationItem.classList.add("hide")
+                                }
+                            })
+                            let checkAllhideChild = [...allLocations.filter(loc => {
+                                if (loc.classList.contains('hide')) {
+                                    return loc
+                                }
+                            })];
+                            // table.classList.remove("hide")
+                            if (checkAllhideChild.length <= 0) {
+                                table.classList.remove("hide")
+                            }
+                            else if (checkAllhideChild.length == allLocations.length) {
+                                table.classList.add("hide")
+                            }
                         })
-                    })
+                    }
+                    else {
+                        console.log("department, not location not location")
+                        allTablesArr.forEach(table => {
+                            if (this.filteredDepartments.includes(table)) {
+                                table.classList.remove("hide");
+                            }
+                            else {
+                                table.classList.add("hide")
+                            }
+                            let allLocations = table.querySelectorAll("[data-item='job-item']");
+                            allLocations.forEach(locationItem => {
+                                locationItem.classList.remove("hide");
+                            })
+                        })
+                    }
                 }
             }
             else if (this.filteredDepartments.length == 0) {
                 if (this.filteredLocations.length > 0) {
-                    console.log("not department but location");
-                    allTablesArr.forEach(table => {
-                        let allLocations = [...table.querySelectorAll("[data-item='job-item']")];
-                        allLocations.forEach(locationItem => {
-                            if (this.filteredLocations.includes(locationItem)) {
-                                locationItem.classList.remove("hide");
+                    if(this.filteredRoles.length > 0){
+                        console.log("not department but location & search");
+                        allTablesArr.forEach(table => {
+                            let allLocations = [...table.querySelectorAll("[data-item='job-item']")];
+                            allLocations.forEach(locationItem => {
+                                if (this.filteredLocations.includes(locationItem) && this.filteredRoles.includes(locationItem)) {
+                                    locationItem.classList.remove("hide");
+                                }
+                                else {
+                                    locationItem.classList.add("hide");
+                                }
+                            })
+                            let checkAllhideChild = [...allLocations.filter(loc => {
+                                if (loc.classList.contains('hide')) {
+                                    return loc
+                                }
+                            })];
+                            table.classList.remove("hide")
+                            if (checkAllhideChild.length <= 0) {
+                                table.classList.remove("hide")
                             }
-                            else {
-                                locationItem.classList.add("hide");
+                            else if (checkAllhideChild.length == allLocations.length) {
+                                table.classList.add("hide")
                             }
                         })
-                        let checkAllhideChild = [...allLocations.filter(loc => {
-                            if (loc.classList.contains('hide')) {
-                                return loc
-                            }
-                        })];
-                        table.classList.remove("hide")
-                        if (checkAllhideChild.length <= 0) {
+                    }
+                    else{
+                        console.log("not department, but location, not search");
+                        allTablesArr.forEach(table => {
+                            let allLocations = [...table.querySelectorAll("[data-item='job-item']")];
+                            allLocations.forEach(locationItem => {
+                                if (this.filteredLocations.includes(locationItem)) {
+                                    locationItem.classList.remove("hide");
+                                }
+                                else {
+                                    locationItem.classList.add("hide");
+                                }
+                            })
+                            let checkAllhideChild = [...allLocations.filter(loc => {
+                                if (loc.classList.contains('hide')) {
+                                    return loc
+                                }
+                            })];
                             table.classList.remove("hide")
-                        }
-                        else if (checkAllhideChild.length == allLocations.length) {
-                            table.classList.add("hide")
-                        }
-                    })
+                            if (checkAllhideChild.length <= 0) {
+                                table.classList.remove("hide")
+                            }
+                            else if (checkAllhideChild.length == allLocations.length) {
+                                table.classList.add("hide")
+                            }
+                        })
+                    }
                 }
-                else {
+                else if(this.filteredRoles.length > 0){
+                    console.log("not department, not location, only search");
+                        allTablesArr.forEach(table => {
+                            let allLocations = [...table.querySelectorAll("[data-item='job-item']")];
+                            allLocations.forEach(locationItem => {
+                                if (this.filteredRoles.includes(locationItem)) {
+                                    locationItem.classList.remove("hide");
+                                }
+                                else {
+                                    locationItem.classList.add("hide");
+                                }
+                            })
+                            let checkAllhideChild = [...allLocations.filter(loc => {
+                                if (loc.classList.contains('hide')) {
+                                    return loc
+                                }
+                            })];
+                            table.classList.remove("hide")
+                            if (checkAllhideChild.length <= 0) {
+                                table.classList.remove("hide")
+                            }
+                            else if (checkAllhideChild.length == allLocations.length) {
+                                table.classList.add("hide")
+                            }
+                        })
+                }
+                else{
                     console.log("not department not location")
                     allTablesArr.forEach(table => {
                         table.classList.remove("hide");
