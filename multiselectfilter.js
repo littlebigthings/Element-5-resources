@@ -1,6 +1,5 @@
 class GREENHOUSEJOBBOARD {
     constructor() {
-
         this.tableBody = document.querySelector("[data-item='table']");
         this.jobItem = this.tableBody ? this.tableBody.querySelector("[data-item='job-item']") : null;
         this.tableParent = this.tableBody.parentElement;
@@ -12,7 +11,6 @@ class GREENHOUSEJOBBOARD {
         this.locationDropDownHead = document.querySelector("[data-item='location-default']");
         this.locationList = document.querySelector("[data-item='location-list']");
         this.locationItem = this.locationList ? this.locationList.querySelector("[data-item='location']") : null;
-
         this.searchInput = document.querySelector("[data-item='search']");
 
         this.jobs = null;
@@ -52,8 +50,8 @@ class GREENHOUSEJOBBOARD {
             if (jobs.length > 0) {
                 jobs.forEach(job => {
                     if (job.jobs.length > 0) {
-                        let newTable = this.tableBody.cloneNode(true);
-                        let department = newTable ? newTable.querySelector("[data-item='department']") : null;
+                        let newTable = this.tableBody.cloneNode(true),
+                        department = newTable ? newTable.querySelector("[data-item='department']") : null;
                         department.innerHTML = job.name;
                         department.setAttribute('data-dept', this.convertToSlug(job.name));
                         if (department != null) {
@@ -64,11 +62,11 @@ class GREENHOUSEJOBBOARD {
                             this.departmentList.appendChild(newDepartment)
                         }
                         job.jobs.forEach(data => {
-                            let newJob = this.jobItem.cloneNode(true);
-                            let roleLink = newJob ? newJob.querySelector("[data-item='role-link']") : null;
-                            let roleText = newJob ? newJob.querySelector("[data-item='role-text']") : null;
-                            let location = newJob ? newJob.querySelector("[data-item='location']") : null;
-                            let apply = newJob ? newJob.querySelector("[data-item='apply']") : null;
+                            let newJob = this.jobItem.cloneNode(true),
+                            roleLink = newJob ? newJob.querySelector("[data-item='role-link']") : null,
+                            roleText = newJob ? newJob.querySelector("[data-item='role-text']") : null,
+                            location = newJob ? newJob.querySelector("[data-item='location']") : null,
+                            apply = newJob ? newJob.querySelector("[data-item='apply']") : null;
 
                             roleLink.setAttribute('href', data.absolute_url);
                             roleText.innerHTML = data.title;
@@ -108,126 +106,87 @@ class GREENHOUSEJOBBOARD {
     addFilters() {
         this.departmentList.childNodes.forEach(child => {
             child.addEventListener('click', (e) => {
-                let clickedElm = e.target;
-                let isActive = clickedElm.getAttribute("is-active");
-                let departmentName = e.target.getAttribute('search-dept');
+                let clickedElm = e.target,
+                isActive = clickedElm.getAttribute("is-active"),
+                departmentName = e.target.getAttribute('search-dept');
 
-                if(departmentName == 'all-departments'){
-                    console.log("all dept")
-                    this.departmentDropDownHead.innerHTML = 'All Departments';
-                    this.filteredDepartments = [];
+                if (departmentName == 'all-departments') {
                     this.clickedOndepartment = [];
-                    this.clickedOnDepartmentName = [];
-                    this.departmentList.childNodes.forEach(child => {
-                        child.setAttribute('is-active', false)
-                        child.classList.remove("active")
-                        })
-                    this.filterJobs();
                 }
-                else if(isActive == "false"){
-                    console.log("not all")
+                else if (isActive == "false") {
                     clickedElm.classList.add("active")
                     clickedElm.setAttribute("is-active", true);
                     this.clickedOndepartment.push(departmentName);
                     this.clickedOnDepartmentName.push(e.target.innerText);
                 }
-                else if(isActive == "true"){
-                    console.log("disable dept")
+                else if (isActive == "true") {
                     child.classList.remove("active")
                     clickedElm.setAttribute("is-active", false);
-                    let idx = this.clickedOndepartment.indexOf(departmentName)
-                    let idxName = this.clickedOnDepartmentName.indexOf(e.target.innerText)
+                    let idx = this.clickedOndepartment.indexOf(departmentName),
+                    idxName = this.clickedOnDepartmentName.indexOf(e.target.innerText)
                     this.clickedOndepartment.splice(idx, 1);
                     this.clickedOnDepartmentName.splice(idxName, 1);
                 }
-                console.log(this.clickedOndepartment)
-                if(this.clickedOndepartment.length>1){
-                    this.departmentDropDownHead.innerHTML = `${this.clickedOnDepartmentName[0]} +${this.clickedOndepartment.length - 1} More`;
-                }
-                else{
-                    this.departmentDropDownHead.innerHTML = `${this.clickedOnDepartmentName[0]}`;
-                }
+
+                this.changeHeadName({
+                    check: this.clickedOndepartment,
+                    getName: this.clickedOnDepartmentName,
+                    setHead: this.departmentDropDownHead,
+                })
+
                 if (this.clickedOndepartment.length > 0) {
-                        let getDepartment = [];
-                        this.clickedOndepartment.forEach(dept => {
-                            getDepartment.push(...document.querySelectorAll(`[data-dept='${dept}']`));
-                        })
-                        this.filteredDepartments = getDepartment.length > 0 ? getDepartment.map(dept => dept.closest("[data-item='table']")) : null;
-                        this.filterJobs()  
+                    let getDepartment = [];
+                    this.clickedOndepartment.forEach(dept => {
+                        getDepartment.push(...document.querySelectorAll(`[data-dept='${dept}']`));
+                    })
+                    this.filteredDepartments = getDepartment.length > 0 ? getDepartment.map(dept => dept.closest("[data-item='table']")) : null;
+                    this.filterJobs()
                 }
-                else{
-                    this.departmentDropDownHead.innerHTML = 'All Departments';
-                    this.filteredDepartments = [];
-                    this.clickedOndepartment = [];
-                    this.departmentList.childNodes.forEach(child => {
-                        child.setAttribute('is-active', false)
-                        child.classList.remove("active")
-                        })
-                    this.filterJobs();
+                else {
+                    this.resetFilter(true, false)
                 }
             })
         })
         this.locationList.childNodes.forEach(child => {
             child.addEventListener('click', (e) => {
-                let clickedElm = e.target;
-                let isActive = clickedElm.getAttribute("is-active");
-                let locationName = e.target.getAttribute('search-location');
-                
-                if(locationName == 'all-locations'){
-                    console.log("all loc")
-                    this.locationDropDownHead.innerHTML = 'All locations';
-                    this.filteredLocations = [];
+                let clickedElm = e.target,
+                isActive = clickedElm.getAttribute("is-active"),
+                locationName = e.target.getAttribute('search-location');
+
+                if (locationName == 'all-locations') {
                     this.clickedOnLocation = [];
-                    this.clickedOnLocationName = [];
-                    this.locationList.childNodes.forEach(child => {
-                        child.classList.remove("active")
-                        child.setAttribute('is-active', false)
-                    })
-                    this.filterJobs();
                 }
-                else if(isActive == "false"){
-                    console.log("not all")
+                else if (isActive == "false") {
                     child.classList.add("active")
                     clickedElm.setAttribute("is-active", true);
                     this.clickedOnLocation.push(locationName);
                     this.clickedOnLocationName.push(e.target.innerText);
                 }
-                else if(isActive == "true"){
-                    console.log("disable loc")
+                else if (isActive == "true") {
                     clickedElm.classList.remove("active")
                     clickedElm.setAttribute("is-active", false);
-                    let idx = this.clickedOnLocation.indexOf(locationName);
-                    let idxName = this.clickedOnLocationName.indexOf(e.target.innerText);
+                    let idx = this.clickedOnLocation.indexOf(locationName),
+                    idxName = this.clickedOnLocationName.indexOf(e.target.innerText);
                     this.clickedOnLocation.splice(idx, 1);
-                    this.clickedOnLocationName.splice(idx, 1);
+                    this.clickedOnLocationName.splice(idxName, 1);
                 }
 
-                console.log(this.clickedOnLocation)
+                this.changeHeadName({
+                    check: this.clickedOnLocation,
+                    getName: this.clickedOnLocationName,
+                    setHead: this.locationDropDownHead,
+                })
 
-                if(this.clickedOnLocation.length>0){
-                    this.locationDropDownHead.innerHTML = `${this.clickedOnLocationName[0]} +${this.clickedOnLocation.length - 1} More`;
-                }else{
-                    this.locationDropDownHead.innerHTML = `${this.clickedOnLocationName[0]}`;
-                }
                 if (this.clickedOnLocation.length > 0) {
-                    
-                        let getLocations = [];
-                        this.clickedOnLocation.forEach(loc => {
-                            getLocations.push(...document.querySelectorAll(`[data-location='${loc}']`));
-                        })
-                        this.filteredLocations = getLocations.length > 0 ? getLocations.map(loc => loc.closest("[data-item='job-item']")) : null;
-                        this.filterJobs()
-                    
-                }
-                else{
-                    this.locationDropDownHead.innerHTML = 'All Locations';
-                    this.filteredLocations = [];
-                    this.clickedOnLocation = [];
-                    this.locationList.childNodes.forEach(child => {
-                        child.classList.remove("active")
-                        child.setAttribute('is-active', false)
+                    let getLocations = [];
+                    this.clickedOnLocation.forEach(loc => {
+                        getLocations.push(...document.querySelectorAll(`[data-location='${loc}']`));
                     })
-                    this.filterJobs();
+                    this.filteredLocations = getLocations.length > 0 ? getLocations.map(loc => loc.closest("[data-item='job-item']")) : null;
+                    this.filterJobs()
+                }
+                else {
+                    this.resetFilter(false, true)
                 }
             })
         })
@@ -253,7 +212,6 @@ class GREENHOUSEJOBBOARD {
             if (this.filteredDepartments.length > 0) {
                 if (this.filteredLocations.length > 0) {
                     if (this.filteredRoles.length > 0) {
-                        console.log("department and location and search")
                         allTablesArr.forEach(table => {
                             let allLocations = [...table.querySelectorAll("[data-item='job-item']")];
                             allLocations.forEach(locationItem => {
@@ -264,11 +222,7 @@ class GREENHOUSEJOBBOARD {
                                     locationItem.classList.add("hide");
                                 }
                             })
-                            let checkAllhideChild = [...allLocations.filter(loc => {
-                                if (loc.classList.contains('hide')) {
-                                    return loc
-                                }
-                            })];
+                            let checkAllhideChild = this.returnChilds(allLocations);
                             if (this.filteredDepartments.includes(table)) {
                                 table.classList.remove("hide");
                             }
@@ -284,7 +238,7 @@ class GREENHOUSEJOBBOARD {
                         })
                     }
                     else {
-                        console.log("department and location")
+
                         allTablesArr.forEach(table => {
                             let allLocations = [...table.querySelectorAll("[data-item='job-item']")];
                             allLocations.forEach(locationItem => {
@@ -295,11 +249,7 @@ class GREENHOUSEJOBBOARD {
                                     locationItem.classList.add("hide");
                                 }
                             })
-                            let checkAllhideChild = [...allLocations.filter(loc => {
-                                if (loc.classList.contains('hide')) {
-                                    return loc
-                                }
-                            })];
+                            let checkAllhideChild = this.returnChilds(allLocations);
                             if (this.filteredDepartments.includes(table)) {
                                 table.classList.remove("hide");
                             }
@@ -317,7 +267,7 @@ class GREENHOUSEJOBBOARD {
                 }
                 else {
                     if (this.filteredRoles.length > 0) {
-                        console.log("department & search not location")
+
                         allTablesArr.forEach(table => {
                             if (this.filteredDepartments.includes(table)) {
                                 table.classList.remove("hide");
@@ -334,12 +284,8 @@ class GREENHOUSEJOBBOARD {
                                     locationItem.classList.add("hide")
                                 }
                             })
-                            let checkAllhideChild = [...allLocations.filter(loc => {
-                                if (loc.classList.contains('hide')) {
-                                    return loc
-                                }
-                            })];
-                            // table.classList.remove("hide")
+                            let checkAllhideChild = this.returnChilds(allLocations);
+
                             if (checkAllhideChild.length <= 0) {
                                 table.classList.remove("hide")
                             }
@@ -349,7 +295,7 @@ class GREENHOUSEJOBBOARD {
                         })
                     }
                     else {
-                        console.log("department, not location not location")
+
                         allTablesArr.forEach(table => {
                             if (this.filteredDepartments.includes(table)) {
                                 table.classList.remove("hide");
@@ -367,8 +313,8 @@ class GREENHOUSEJOBBOARD {
             }
             else if (this.filteredDepartments.length == 0) {
                 if (this.filteredLocations.length > 0) {
-                    if(this.filteredRoles.length > 0){
-                        console.log("not department but location & search");
+                    if (this.filteredRoles.length > 0) {
+
                         allTablesArr.forEach(table => {
                             let allLocations = [...table.querySelectorAll("[data-item='job-item']")];
                             allLocations.forEach(locationItem => {
@@ -379,11 +325,7 @@ class GREENHOUSEJOBBOARD {
                                     locationItem.classList.add("hide");
                                 }
                             })
-                            let checkAllhideChild = [...allLocations.filter(loc => {
-                                if (loc.classList.contains('hide')) {
-                                    return loc
-                                }
-                            })];
+                            let checkAllhideChild = this.returnChilds(allLocations);
                             table.classList.remove("hide")
                             if (checkAllhideChild.length <= 0) {
                                 table.classList.remove("hide")
@@ -393,8 +335,8 @@ class GREENHOUSEJOBBOARD {
                             }
                         })
                     }
-                    else{
-                        console.log("not department, but location, not search");
+                    else {
+
                         allTablesArr.forEach(table => {
                             let allLocations = [...table.querySelectorAll("[data-item='job-item']")];
                             allLocations.forEach(locationItem => {
@@ -405,11 +347,7 @@ class GREENHOUSEJOBBOARD {
                                     locationItem.classList.add("hide");
                                 }
                             })
-                            let checkAllhideChild = [...allLocations.filter(loc => {
-                                if (loc.classList.contains('hide')) {
-                                    return loc
-                                }
-                            })];
+                            let checkAllhideChild = this.returnChilds(allLocations);
                             table.classList.remove("hide")
                             if (checkAllhideChild.length <= 0) {
                                 table.classList.remove("hide")
@@ -420,34 +358,29 @@ class GREENHOUSEJOBBOARD {
                         })
                     }
                 }
-                else if(this.filteredRoles.length > 0){
-                    console.log("not department, not location, only search");
-                        allTablesArr.forEach(table => {
-                            let allLocations = [...table.querySelectorAll("[data-item='job-item']")];
-                            allLocations.forEach(locationItem => {
-                                if (this.filteredRoles.includes(locationItem)) {
-                                    locationItem.classList.remove("hide");
-                                }
-                                else {
-                                    locationItem.classList.add("hide");
-                                }
-                            })
-                            let checkAllhideChild = [...allLocations.filter(loc => {
-                                if (loc.classList.contains('hide')) {
-                                    return loc
-                                }
-                            })];
-                            table.classList.remove("hide")
-                            if (checkAllhideChild.length <= 0) {
-                                table.classList.remove("hide")
+                else if (this.filteredRoles.length > 0) {
+
+                    allTablesArr.forEach(table => {
+                        let allLocations = [...table.querySelectorAll("[data-item='job-item']")];
+                        allLocations.forEach(locationItem => {
+                            if (this.filteredRoles.includes(locationItem)) {
+                                locationItem.classList.remove("hide");
                             }
-                            else if (checkAllhideChild.length == allLocations.length) {
-                                table.classList.add("hide")
+                            else {
+                                locationItem.classList.add("hide");
                             }
                         })
+                        let checkAllhideChild = this.returnChilds(allLocations);
+                        table.classList.remove("hide")
+                        if (checkAllhideChild.length <= 0) {
+                            table.classList.remove("hide")
+                        }
+                        else if (checkAllhideChild.length == allLocations.length) {
+                            table.classList.add("hide")
+                        }
+                    })
                 }
-                else{
-                    console.log("not department not location")
+                else {
                     allTablesArr.forEach(table => {
                         table.classList.remove("hide");
                         let allLocations = table.querySelectorAll("[data-item='job-item']");
@@ -460,10 +393,51 @@ class GREENHOUSEJOBBOARD {
         }
     }
 
+    returnChilds(item){
+        let child = [...item.filter(loc => {
+            if (loc.classList.contains('hide')) {
+                return loc
+            }
+        })];
+        return child
+    }
+
     convertToSlug(Text) {
         return Text.toLowerCase()
             .replace(/[^\w ]+/g, "")
             .replace(/ +/g, "-");
+    }
+
+    resetFilter(department, location) {
+        if (department) {
+            this.departmentDropDownHead.innerHTML = "All Departments";
+            this.filteredDepartments = [];
+            this.clickedOnDepartmentName = [];
+            this.departmentList.childNodes.forEach(child => {
+                child.setAttribute("is-active", false)
+                child.classList.remove("active")
+            })
+            this.filterJobs();
+        }
+        else if (location) {
+            this.locationDropDownHead.innerHTML = "All locations";
+            this.filteredLocations = [];
+            this.clickedOnLocationName = [];
+            this.locationList.childNodes.forEach(child => {
+                child.classList.remove("active")
+                child.setAttribute("is-active", false)
+            })
+            this.filterJobs();
+        }
+    }
+
+    changeHeadName(nameObj) {
+        if (nameObj.check.length > 1) {
+            nameObj.setHead.innerHTML = `${nameObj.getName[0]} +${nameObj.check.length - 1} More`;
+        }
+        else {
+            nameObj.setHead.innerHTML = `${nameObj.getName[0]}`;
+        }
     }
 }
 
