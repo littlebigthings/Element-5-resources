@@ -27,23 +27,65 @@ class GREENHOUSEJOBBOARD {
         this.init();
     }
     init() {
-        this.loadJobsFromApi();
+        // this.loadJobsFromApi();
+        this.loadJobsFromCms();
     }
 
-    loadJobsFromApi() {
-        let url = 'https://boards-api.greenhouse.io/v1/boards/element5/departments';
-        fetch(url)
-            .then((res) => {
-                if (res.ok) {
-                    return res.json();
-                }
-            })
-            .then((data) => {
-                this.jobs = data.departments;
-                this.appendJobs(this.jobs);
-            })
-            .catch((err) => console.log(err));
+    loadJobsFromCms() {
+        if (jobsObject != undefined) {
+            let newDepartmentObj = [];
+
+            if (jobsObject.departments.length > 0) {
+                jobsObject.departments.forEach(department => {
+                    // console.log(department)
+                    let jobItem = {
+                        "absolute_url": department.jobURL,
+                        "location": {
+                            "name": department.jobLocation,
+                        },
+                        "title": department.job,
+                    }
+
+                    if (newDepartmentObj.length > 0) {
+                        let filterDept = newDepartmentObj.filter(newDepartment => {
+                            return newDepartment.name === department.name
+                        })
+                        if (filterDept.length > 0) {
+                            filterDept[0].jobs.push(jobItem)
+                        }else{
+                            newDepartmentObj.push({
+                                "name": department.name,
+                                "jobs": [jobItem]
+                            })
+                        }
+                    } else {
+                        newDepartmentObj.push({
+                            "name": department.name,
+                            "jobs": [jobItem]
+                        })
+                    }
+                });
+
+                this.appendJobs(newDepartmentObj)
+            }
+        }
     }
+    // loadJobsFromApi() {
+    //     let url = 'https://boards-api.greenhouse.io/v1/boards/element5/departments';
+    //     fetch(url)
+    //         .then((res) => {
+    //             if (res.ok) {
+    //                 return res.json();
+    //             }
+    //         })
+    //         .then((data) => {
+    //             this.jobs = data.departments;
+    //             this.appendJobs(this.jobs);
+    //         })
+    //         .catch((err) => console.log(err));
+    // }
+
+
 
     appendJobs(jobs) {
         if (this.tableBody != undefined && this.jobItem != undefined) {
@@ -51,7 +93,7 @@ class GREENHOUSEJOBBOARD {
                 jobs.forEach(job => {
                     if (job.jobs.length > 0) {
                         let newTable = this.tableBody.cloneNode(true),
-                        department = newTable ? newTable.querySelector("[data-item='department']") : null;
+                            department = newTable ? newTable.querySelector("[data-item='department']") : null;
                         department.innerHTML = job.name;
                         department.setAttribute('data-dept', this.convertToSlug(job.name));
                         if (department != null) {
@@ -63,10 +105,10 @@ class GREENHOUSEJOBBOARD {
                         }
                         job.jobs.forEach(data => {
                             let newJob = this.jobItem.cloneNode(true),
-                            roleLink = newJob ? newJob.querySelector("[data-item='role-link']") : null,
-                            roleText = newJob ? newJob.querySelector("[data-item='role-text']") : null,
-                            location = newJob ? newJob.querySelector("[data-item='location']") : null,
-                            apply = newJob ? newJob.querySelector("[data-item='apply']") : null;
+                                roleLink = newJob ? newJob.querySelector("[data-item='role-link']") : null,
+                                roleText = newJob ? newJob.querySelector("[data-item='role-text']") : null,
+                                location = newJob ? newJob.querySelector("[data-item='location']") : null,
+                                apply = newJob ? newJob.querySelector("[data-item='apply']") : null;
 
                             roleLink.setAttribute('href', data.absolute_url);
                             roleText.innerHTML = data.title;
@@ -107,8 +149,8 @@ class GREENHOUSEJOBBOARD {
         this.departmentList.childNodes.forEach(child => {
             child.addEventListener('click', (e) => {
                 let clickedElm = e.target,
-                isActive = clickedElm.getAttribute("is-active"),
-                departmentName = e.target.getAttribute('search-dept');
+                    isActive = clickedElm.getAttribute("is-active"),
+                    departmentName = e.target.getAttribute('search-dept');
 
                 if (departmentName == 'all-departments') {
                     this.clickedOndepartment = [];
@@ -123,7 +165,7 @@ class GREENHOUSEJOBBOARD {
                     child.classList.remove("active")
                     clickedElm.setAttribute("is-active", false);
                     let idx = this.clickedOndepartment.indexOf(departmentName),
-                    idxName = this.clickedOnDepartmentName.indexOf(e.target.innerText)
+                        idxName = this.clickedOnDepartmentName.indexOf(e.target.innerText)
                     this.clickedOndepartment.splice(idx, 1);
                     this.clickedOnDepartmentName.splice(idxName, 1);
                 }
@@ -150,8 +192,8 @@ class GREENHOUSEJOBBOARD {
         this.locationList.childNodes.forEach(child => {
             child.addEventListener('click', (e) => {
                 let clickedElm = e.target,
-                isActive = clickedElm.getAttribute("is-active"),
-                locationName = e.target.getAttribute('search-location');
+                    isActive = clickedElm.getAttribute("is-active"),
+                    locationName = e.target.getAttribute('search-location');
 
                 if (locationName == 'all-locations') {
                     this.clickedOnLocation = [];
@@ -166,7 +208,7 @@ class GREENHOUSEJOBBOARD {
                     clickedElm.classList.remove("active")
                     clickedElm.setAttribute("is-active", false);
                     let idx = this.clickedOnLocation.indexOf(locationName),
-                    idxName = this.clickedOnLocationName.indexOf(e.target.innerText);
+                        idxName = this.clickedOnLocationName.indexOf(e.target.innerText);
                     this.clickedOnLocation.splice(idx, 1);
                     this.clickedOnLocationName.splice(idxName, 1);
                 }
@@ -393,7 +435,7 @@ class GREENHOUSEJOBBOARD {
         }
     }
 
-    returnChilds(item){
+    returnChilds(item) {
         let child = [...item.filter(loc => {
             if (loc.classList.contains('hide')) {
                 return loc
