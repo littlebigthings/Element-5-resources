@@ -18,10 +18,9 @@ class GREENHOUSEJOBBOARD {
         this.jobs = null;
         this.locationArr = [];
 
-        this.clickedOnLocation = [];
-        this.clickedOndepartment = [];
-        this.clickedOnLocationName = [];
-        this.clickedOnDepartmentName = [];
+        this.clickedOnLocation = null;
+        this.clickedOndepartment = null;
+        this.lastSearch = null;
 
         this.filteredDepartments = [];
         this.filteredLocations = [];
@@ -60,7 +59,6 @@ class GREENHOUSEJOBBOARD {
                             let newDepartment = this.departmentItem.cloneNode(true);
                             newDepartment.innerHTML = job.name;
                             newDepartment.setAttribute('search-dept', this.convertToSlug(job.name));
-                            newDepartment.setAttribute("is-active", false);
                             this.departmentList.appendChild(newDepartment)
                         }
                         job.jobs.forEach(data => {
@@ -82,7 +80,6 @@ class GREENHOUSEJOBBOARD {
                                 let newLocation = this.locationItem.cloneNode(true);
                                 newLocation.innerHTML = data.location.name;
                                 newLocation.setAttribute('search-location', this.convertToSlug(data.location.name));
-                                newLocation.setAttribute('is-active', false);
                                 this.locationList.appendChild(newLocation);
 
                             }
@@ -108,126 +105,35 @@ class GREENHOUSEJOBBOARD {
     addFilters() {
         this.departmentList.childNodes.forEach(child => {
             child.addEventListener('click', (e) => {
-                let clickedElm = e.target;
-                let isActive = clickedElm.getAttribute("is-active");
-                let departmentName = e.target.getAttribute('search-dept');
-
-                if(departmentName == 'all-departments'){
-                    console.log("all dept")
-                    this.departmentDropDownHead.innerHTML = 'All Departments';
-                    this.filteredDepartments = [];
-                    this.clickedOndepartment = [];
-                    this.clickedOnDepartmentName = [];
-                    this.departmentList.childNodes.forEach(child => {
-                        child.setAttribute('is-active', false)
-                        child.classList.remove("active")
-                        })
-                    this.filterJobs();
-                }
-                else if(isActive == "false"){
-                    console.log("not all")
-                    clickedElm.classList.add("active")
-                    clickedElm.setAttribute("is-active", true);
-                    this.clickedOndepartment.push(departmentName);
-                    this.clickedOnDepartmentName.push(e.target.innerText);
-                }
-                else if(isActive == "true"){
-                    console.log("disable dept")
-                    child.classList.remove("active")
-                    clickedElm.setAttribute("is-active", false);
-                    let idx = this.clickedOndepartment.indexOf(departmentName)
-                    let idxName = this.clickedOnDepartmentName.indexOf(e.target.innerText)
-                    this.clickedOndepartment.splice(idx, 1);
-                    this.clickedOnDepartmentName.splice(idxName, 1);
-                }
-                console.log(this.clickedOndepartment)
-                if(this.clickedOndepartment.length>1){
-                    this.departmentDropDownHead.innerHTML = `${this.clickedOnDepartmentName[0]} +${this.clickedOndepartment.length - 1} More`;
-                }
-                else{
-                    this.departmentDropDownHead.innerHTML = `${this.clickedOnDepartmentName[0]}`;
-                }
+                this.clickedOndepartment = e.target.getAttribute('search-dept');
+                this.departmentDropDownHead.innerHTML = e.target.innerHTML;
                 if (this.clickedOndepartment.length > 0) {
-                        let getDepartment = [];
-                        this.clickedOndepartment.forEach(dept => {
-                            getDepartment.push(...document.querySelectorAll(`[data-dept='${dept}']`));
-                        })
+                    if (this.clickedOndepartment != 'all-departments') {
+                        let getDepartment = [...document.querySelectorAll(`[data-dept='${this.clickedOndepartment}']`)];
                         this.filteredDepartments = getDepartment.length > 0 ? getDepartment.map(dept => dept.closest("[data-item='table']")) : null;
-                        this.filterJobs()  
-                }
-                else{
-                    this.departmentDropDownHead.innerHTML = 'All Departments';
-                    this.filteredDepartments = [];
-                    this.clickedOndepartment = [];
-                    this.departmentList.childNodes.forEach(child => {
-                        child.setAttribute('is-active', false)
-                        child.classList.remove("active")
-                        })
-                    this.filterJobs();
+                        this.filterJobs()
+                    }
+                    else {
+                        this.filteredDepartments = [];
+                        this.filterJobs()
+                    }
                 }
             })
         })
         this.locationList.childNodes.forEach(child => {
             child.addEventListener('click', (e) => {
-                let clickedElm = e.target;
-                let isActive = clickedElm.getAttribute("is-active");
-                let locationName = e.target.getAttribute('search-location');
-                
-                if(locationName == 'all-locations'){
-                    console.log("all loc")
-                    this.locationDropDownHead.innerHTML = 'All locations';
-                    this.filteredLocations = [];
-                    this.clickedOnLocation = [];
-                    this.clickedOnLocationName = [];
-                    this.locationList.childNodes.forEach(child => {
-                        child.classList.remove("active")
-                        child.setAttribute('is-active', false)
-                    })
-                    this.filterJobs();
-                }
-                else if(isActive == "false"){
-                    console.log("not all")
-                    child.classList.add("active")
-                    clickedElm.setAttribute("is-active", true);
-                    this.clickedOnLocation.push(locationName);
-                    this.clickedOnLocationName.push(e.target.innerText);
-                }
-                else if(isActive == "true"){
-                    console.log("disable loc")
-                    clickedElm.classList.remove("active")
-                    clickedElm.setAttribute("is-active", false);
-                    let idx = this.clickedOnLocation.indexOf(locationName);
-                    let idxName = this.clickedOnLocationName.indexOf(e.target.innerText);
-                    this.clickedOnLocation.splice(idx, 1);
-                    this.clickedOnLocationName.splice(idx, 1);
-                }
-
-                console.log(this.clickedOnLocation)
-
-                if(this.clickedOnLocation.length>0){
-                    this.locationDropDownHead.innerHTML = `${this.clickedOnLocationName[0]} +${this.clickedOnLocation.length - 1} More`;
-                }else{
-                    this.locationDropDownHead.innerHTML = `${this.clickedOnLocationName[0]}`;
-                }
+                this.clickedOnLocation = e.target.getAttribute('search-location');
+                this.locationDropDownHead.innerHTML = e.target.innerHTML;
                 if (this.clickedOnLocation.length > 0) {
-                    
-                        let getLocations = [];
-                        this.clickedOnLocation.forEach(loc => {
-                            getLocations.push(...document.querySelectorAll(`[data-location='${loc}']`));
-                        })
-                        this.filteredLocations = getLocations.length > 0 ? getLocations.map(loc => loc.closest("[data-item='job-item']")) : null;
+                    if (this.clickedOnLocation != 'all-locations') {
+                        let getLocation = [...document.querySelectorAll(`[data-location='${this.clickedOnLocation}']`)];
+                        this.filteredLocations = getLocation.length > 0 ? getLocation.map(dept => dept.closest("[data-item='job-item']")) : null;
                         this.filterJobs()
-                    
-                }
-                else{
-                    this.locationDropDownHead.innerHTML = 'All Locations';
-                    this.filteredLocations = [];
-                    this.clickedOnLocation = [];
-                    this.locationList.childNodes.forEach(child => {
-                        child.classList.remove("active")
-                        child.setAttribute('is-active', false)
-                    })
-                    this.filterJobs();
+                    }
+                    else {
+                        this.filteredLocations = [];
+                        this.filterJobs()
+                    }
                 }
             })
         })
